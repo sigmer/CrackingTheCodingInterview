@@ -1,5 +1,9 @@
 package com.andrewulliani.interview;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
 import java.util.stream.IntStream;
 
 import org.testng.Assert;
@@ -135,5 +139,62 @@ public class Chapter4 {
         node.setRight(createBinaryTree(secondHalf));
         
         return node;
+    }
+    
+    @Test
+    public void test4() {
+        Map<Integer, Queue<BinaryTreeNode<Integer>>> map =
+                getMapOfDepths(createBinaryTree(new int[] {1, 2}));
+        printDepths(map);
+        
+        Map<Integer, Queue<BinaryTreeNode<Integer>>> map2 =
+                getMapOfDepths(createBinaryTree(new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9}));
+        printDepths(map2);
+    }
+    
+    private Map<Integer, Queue<BinaryTreeNode<Integer>>> getMapOfDepths(BinaryTreeNode<Integer> root) {
+        Map<Integer, Queue<BinaryTreeNode<Integer>>> map = new HashMap<>();
+        int depth = 0;
+        map.put(depth, new LinkedList<>());
+        
+        // perform a breadth-first traversal of the binary search tree
+        Queue<BinaryTreeNode<Integer>> queue = new LinkedList<>();
+        queue.add(root);
+        BinaryTreeNode<Integer> previousNode = null;
+        while (!queue.isEmpty()) {
+            BinaryTreeNode<Integer> currentNode = queue.remove();
+            if (currentNode.getLeft() != null) {
+                queue.add(currentNode.getLeft());
+            }
+            if (currentNode.getRight() != null) {
+                queue.add(currentNode.getRight());
+            }
+            
+            // if the current node is less than the previous node,
+            // then we have reach the start of a new depth
+            if (previousNode != null && currentNode.getData() < previousNode.getData()) {
+                depth++;
+            }
+            
+            if (!map.containsKey(depth)) {
+                map.put(depth, new LinkedList<>());
+            }
+            
+            Queue<BinaryTreeNode<Integer>> list = map.get(depth);
+            list.add(currentNode);
+            previousNode = currentNode;
+        }
+        
+        return map;
+    }
+    
+    private void printDepths(Map<Integer, Queue<BinaryTreeNode<Integer>>> depthMap) {
+        for (int i=0; i <= depthMap.keySet().size() - 1; i++) {
+            System.out.print("Depth " + i + ": ");
+            for (BinaryTreeNode<Integer> node : depthMap.get(i)) {
+                System.out.print(" " + node.getData());
+            }
+            System.out.println();
+        }
     }
 }
