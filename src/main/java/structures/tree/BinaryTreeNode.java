@@ -7,6 +7,7 @@ public class BinaryTreeNode<T> {
     private T data;
     private BinaryTreeNode<T> left;
     private BinaryTreeNode<T> right;
+    private BinaryTreeNode<T> parent;
     
     public BinaryTreeNode(T data) {
         this.data = data;
@@ -28,6 +29,9 @@ public class BinaryTreeNode<T> {
 
     public void setLeft(BinaryTreeNode<T> left) {
         this.left = left;
+        if (this.left != null) {
+            this.left.parent = this;
+        }
     }
 
     public BinaryTreeNode<T> getRight() {
@@ -36,6 +40,17 @@ public class BinaryTreeNode<T> {
 
     public void setRight(BinaryTreeNode<T> right) {
         this.right = right;
+        if (this.right != null) {
+            this.right.parent = this;
+        }
+    }
+
+    public BinaryTreeNode<T> getParent() {
+        return parent;
+    }
+
+    public void setParent(BinaryTreeNode<T> parent) {
+        this.parent = parent;
     }
 
     public boolean isLeaf() {

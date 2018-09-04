@@ -144,11 +144,11 @@ public class Chapter4 {
     @Test
     public void test4() {
         Map<Integer, Queue<BinaryTreeNode<Integer>>> map =
-                getMapOfDepths(createBinaryTree(new int[] {1, 2}));
+                getMapOfDepths(createBinaryTree(IntStream.range(0, 3).toArray()));
         printDepths(map);
         
         Map<Integer, Queue<BinaryTreeNode<Integer>>> map2 =
-                getMapOfDepths(createBinaryTree(new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9}));
+                getMapOfDepths(createBinaryTree(IntStream.range(0, 10).toArray()));
         printDepths(map2);
     }
     
@@ -195,6 +195,42 @@ public class Chapter4 {
                 System.out.print(" " + node.getData());
             }
             System.out.println();
+        }
+    }
+    
+    @Test
+    public void test5() {
+        BinaryTreeNode<Integer> root = createBinaryTree(new int[] {2, 6, 8, 13, 17, 18, 20, 22});
+        Assert.assertEquals(findNext(root).getData(), new Integer(18));
+        Assert.assertEquals(findNext(root.getLeft().getRight()).getData(), new Integer(17));
+        Assert.assertEquals(findNext(root.getLeft().getLeft()).getData(), new Integer(8));
+        Assert.assertNull(findNext(root.getRight().getRight()));
+    }
+    
+    private BinaryTreeNode<Integer> findNext(BinaryTreeNode<Integer> node) {
+        if (node.getRight() != null) {
+            // the next node is the smallest on the right tree
+            BinaryTreeNode<Integer> next = node.getRight();
+            while (next.getLeft() != null) {
+                next = next.getLeft();
+            }
+            return next;
+        }
+        
+        return findNextUp(node);
+    }
+    
+    private BinaryTreeNode<Integer> findNextUp(BinaryTreeNode<Integer> node) {
+        if (node.getParent() == null) {
+            return null;
+        }
+        
+        if (node.getParent().getData() < node.getData()) {
+            // go up the tree until the parent is greater than the child
+            return findNextUp(node.getParent());
+        }
+        else {
+            return node.getParent();
         }
     }
 }
