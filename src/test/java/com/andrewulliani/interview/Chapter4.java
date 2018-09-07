@@ -1,9 +1,11 @@
 package com.andrewulliani.interview;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import org.testng.Assert;
@@ -14,6 +16,12 @@ import structures.tree.TreeNode;
 
 public class Chapter4 {
     
+    /**
+     * Implement a function to check if a tree is balanced.
+     * For the purposes of this question, a balanced tree is defined
+     * to be a tree such that no two leaf nodes differ in distance
+     * from the root by more than one.
+     */
     @Test
     public void test1() {
         TreeNode<Integer> root = new TreeNode<>(1);
@@ -63,6 +71,10 @@ public class Chapter4 {
         return max - min <= 1;
     }
     
+    /**
+     * Given a directed graph, design an algorithm to
+     * find out whether there is a route between two nodes.
+     */
     @Test
     public void test2() {
         TreeNode<Integer> a = new TreeNode<>(1);
@@ -105,6 +117,10 @@ public class Chapter4 {
         return exists;
     }
     
+    /**
+     * Given a sorted (increasing order) array,
+     * write an algorithm to create a binary tree with minimal height.
+     */
     @Test
     public void test3() {
         int[] array = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -141,6 +157,11 @@ public class Chapter4 {
         return node;
     }
     
+    /**
+     * Given a binary search tree, design an algorithm which creates
+     * a linked list of all the nodes at each depth
+     * (i.e., if you have a tree with depth D, you’ll have D linked lists).
+     */
     @Test
     public void test4() {
         Map<Integer, Queue<BinaryTreeNode<Integer>>> map =
@@ -198,6 +219,10 @@ public class Chapter4 {
         }
     }
     
+    /**
+     * Write an algorithm to find the ‘next’ node (i.e., in-order successor)
+     * of a given node in a binary search tree where each node has a link to its parent.
+     */
     @Test
     public void test5() {
         BinaryTreeNode<Integer> root = createBinaryTree(new int[] {2, 6, 8, 13, 17, 18, 20, 22});
@@ -232,5 +257,99 @@ public class Chapter4 {
         else {
             return node.getParent();
         }
+    }
+    
+    /**
+     * Design an algorithm and write code to find the first
+     * common ancestor of two nodes in a binary tree.
+     * Avoid storing additional nodes in a data structure.
+     * NOTE: This is not necessarily a binary search tree.
+     */
+    @Test
+    public void test6() {
+        BinaryTreeNode<Integer> root = createBinaryTree(IntStream.range(0, 31).toArray());
+        
+        Assert.assertEquals(numOccurances(root, 2), 1);
+        Assert.assertEquals(numOccurances(root, -1), 0);
+        Assert.assertEquals(numOccurances(root, -1, 20), 1);
+        Assert.assertEquals(numOccurances(root, 1, 2, 18, -1), 3);
+        
+        Assert.assertEquals(commonAncestor(root, 8, 20), root);
+        Assert.assertEquals(commonAncestor(root, 6, 13), root.getLeft());
+        Assert.assertEquals(commonAncestor(root, 16, 21), root.getRight().getLeft());
+        Assert.assertEquals(commonAncestor(root, 17, 15), root);
+        Assert.assertNull(commonAncestor(root, -1, 15));
+        Assert.assertNull(commonAncestor(root, -1, -2));
+        Assert.assertNull(commonAncestor(root, -1, 4));
+    }
+    
+    private BinaryTreeNode<Integer> commonAncestor(BinaryTreeNode<Integer> root, int v1, int v2) {
+        int numLeft = numOccurances(root.getLeft(), v1, v2);
+        int numRight = numOccurances(root.getRight(), v1, v2);
+        
+        if ((root.getData().intValue() == v1 || root.getData().intValue() == v2) &&
+                numLeft + numRight == 1) {
+            return root;
+        }
+        
+        if (numLeft == 1 && numRight == 1) {
+            return root;
+        }
+        
+        if (numLeft > 1) {
+            return commonAncestor(root.getLeft(), v1, v2);
+        }
+        
+        if (numRight > 1) {
+            return commonAncestor(root.getRight(), v1, v2);
+        }
+        
+        return null;
+    }
+    
+    private int numOccurances(BinaryTreeNode<Integer> root, int... ints) {
+        return (IntStream.of(ints).anyMatch(i -> root.getData().intValue() == i) ? 1 : 0) +
+                (root.getLeft() != null ? numOccurances(root.getLeft(), ints) : 0) +
+                (root.getRight() != null ? numOccurances(root.getRight(), ints) : 0);
+    }
+    
+    /**
+     * You have two very large binary trees: T1, with millions of nodes,
+     * and T2, with hundreds of nodes.
+     * Create an algorithm to decide if T2 is a subtree of T1.
+     */
+    @Test
+    public void test7() {
+        BinaryTreeNode<Integer> t1 = createBinaryTree(IntStream.range(0, 20).toArray());
+        
+        Assert.assertTrue(isSubtree(t1, createBinaryTree(new int[] {1, 2, 4})));
+        Assert.assertFalse(isSubtree(t1, createBinaryTree(new int[] {1, 2, 3})));
+        Assert.assertFalse(isSubtree(t1, createBinaryTree(new int[] {1, 2, 12})));
+        Assert.assertFalse(isSubtree(createBinaryTree(new int[] {1}), createBinaryTree(new int[] {1, 2, 4})));
+    }
+    
+    private boolean isSubtree(BinaryTreeNode<Integer> t1, BinaryTreeNode<Integer> t2) {
+        if (t1 == null) {
+            return t2 == null;
+        }
+        
+        if (isSubtreeFromRoot(t1, t2)) {
+            return true;
+        }
+        else {
+            return isSubtree(t1.getLeft(), t2) || isSubtree(t1.getRight(), t2);
+        }
+    }
+    
+    private boolean isSubtreeFromRoot(BinaryTreeNode<Integer> t1, BinaryTreeNode<Integer> t2) {
+        boolean isSubtree = t1.getData().equals(t2.getData());
+        
+        if (isSubtree && t2.getLeft() != null) {
+            isSubtree = t1.getLeft() != null && isSubtreeFromRoot(t1.getLeft(), t2.getLeft());
+        }
+        if (isSubtree && t2.getRight() != null) {
+            isSubtree = t1.getRight() != null && isSubtreeFromRoot(t1.getRight(), t2.getRight());
+        }
+        return isSubtree;
     }
 }
