@@ -1,5 +1,9 @@
 package structures.tree;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BinaryTreeNode<T> {
@@ -77,5 +81,37 @@ public class BinaryTreeNode<T> {
         if (node.getRight() != null) {
             printTree(node.getRight(), depth + 1, sb);
         }
+    }
+    
+    /**
+     * Create a binary tree from an array that lists the values
+     * in breadth-first order.
+     * @param array
+     * @return
+     */
+    public static BinaryTreeNode<Integer> createTree(int[] array) {
+        if (array.length == 0) {
+            return null;
+        }
+        
+        Queue<Integer> nums = new LinkedList<>(Arrays.stream(array).boxed().collect(Collectors.toList()));
+        Queue<BinaryTreeNode<Integer>> nodes = new LinkedList<>();
+        
+        BinaryTreeNode<Integer> root = new BinaryTreeNode<>(nums.remove());
+        nodes.add(root);
+        
+        while (!nodes.isEmpty()) {
+            BinaryTreeNode<Integer> node = nodes.remove();
+            if (!nums.isEmpty()) {
+                node.setLeft(new BinaryTreeNode<>(nums.remove()));
+                nodes.add(node.getLeft());
+            }
+            if (!nums.isEmpty()) {
+                node.setRight(new BinaryTreeNode<>(nums.remove()));
+                nodes.add(node.getRight());
+            }
+        }
+        
+        return root;
     }
 }

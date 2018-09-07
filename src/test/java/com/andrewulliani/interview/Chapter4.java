@@ -1,11 +1,11 @@
 package com.andrewulliani.interview;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 import org.testng.Assert;
@@ -351,5 +351,62 @@ public class Chapter4 {
             isSubtree = t1.getRight() != null && isSubtreeFromRoot(t1.getRight(), t2.getRight());
         }
         return isSubtree;
+    }
+    
+    /**
+     * You are given a binary tree in which each node contains a value.
+     * Design an algorithm to print all paths which sum up to that value.
+     * Note that it can be any path in the tree - it does not have to start at the root.
+     */
+    @Test
+    public void test8() {
+        BinaryTreeNode<Integer> tree = BinaryTreeNode.createTree(new int[] {1, 4, 2, 5, 4, 3, 2, 9, 6, 7});
+        tree.printTree();
+        String paths = printPaths(tree);
+        System.out.println(paths);
+        
+        Assert.assertTrue(paths.contains("1 -> 2 -> 3\n"));
+        Assert.assertTrue(paths.contains("1 -> 4 -> 5\n"));
+        Assert.assertTrue(paths.contains("4 -> 5 -> 9\n"));
+        Assert.assertTrue(paths.contains("2 -> 2\n"));
+        Assert.assertTrue(paths.contains("4 -> 4\n"));
+        Assert.assertFalse(paths.contains("1 -> 4 -> 4\n"));
+        Assert.assertFalse(paths.contains("1 -> 2\n"));
+    }
+    
+    private String printPaths(BinaryTreeNode<Integer> root) {
+        StringBuilder sb = new StringBuilder();
+        printPaths(root, new ArrayList<Integer>(), sb);
+        return sb.toString();
+    }
+    
+    private void printPaths(BinaryTreeNode<Integer> root, List<Integer> prev, StringBuilder sb) {
+        if (root == null) {
+            return;
+        }
+        
+        Integer data = root.getData();
+        
+        int sum = 0;
+        for (int i = prev.size()-1; i >= 0; i--) {
+            sum += prev.get(i);
+            if (data.equals(sum)) {
+                for (int j=i; j < prev.size(); j++) {
+                    sb.append(prev.get(j));
+                    if (j < prev.size() - 1) {
+                        sb.append(" -> ");
+                    }
+                }
+                sb.append(" -> " + data + "\n");
+            }
+        }
+        
+        List<Integer> leftList = new ArrayList<>(prev);
+        leftList.add(data);
+        printPaths(root.getLeft(), leftList, sb);
+        
+        List<Integer> rightList = new ArrayList<>(prev);
+        rightList.add(data);
+        printPaths(root.getRight(), rightList, sb);
     }
 }
