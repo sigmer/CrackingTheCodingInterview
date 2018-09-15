@@ -11,6 +11,11 @@ import structures.Node;
 
 public class Chapter2 {
     
+    /**
+     * Write code to remove duplicates from an unsorted linked list.
+     * <p>FOLLOW UP<br>
+     * How would you solve this problem if a temporary buffer is not allowed?</p>
+     */
     @Test
     public void test1() {
         LinkedList<Integer> list = new LinkedList<>(1, 2, 3, 4, 5);
@@ -97,6 +102,9 @@ public class Chapter2 {
         }
     }
     
+    /**
+     * Implement an algorithm to find the nth to last element of a singly linked list.
+     */
     @Test
     public void test2() {
         Assert.assertEquals(findNthToLastItem(new LinkedList<Integer>(5), 1), new Integer(5), "find 1st from last when there is 1 item");
@@ -137,6 +145,12 @@ public class Chapter2 {
         return node.getData();
     }
     
+    /**
+     * Implement an algorithm to delete a node in the middle of a single linked list, given only access to that node.
+     * <p>EXAMPLE<br>
+     * Input: the node ‘c’ from the linked list a->b->c->d->e<br>
+     * Result: nothing is returned, but the new linked list looks like a->b->d->e</p>
+     */
     @Test
     public void test3() {
         LinkedList<Integer> list = new LinkedList<>(1, 2, 3, 4, 5);
@@ -158,6 +172,14 @@ public class Chapter2 {
         node.next(next.next());
     }
     
+    /**
+     * You have two numbers represented by a linked list, where each node contains a single digit.
+     * The digits are stored in reverse order, such that the 1’s digit is at the head of the list.
+     * Write a function that adds the two numbers and returns the sum as a linked list.
+     * EXAMPLE
+     * Input: (3 -> 1 -> 5) + (5 -> 9 -> 2)
+     * Output: 8 -> 0 -> 8
+     */
     @Test
     public void test4() {
         LinkedList<Integer> num1 = new LinkedList<Integer>(3, 1, 5);
@@ -229,6 +251,15 @@ public class Chapter2 {
         return sumList;
     }
     
+    /**
+     * Given a circular linked list, implement an algorithm which returns node at the beginning of the loop.
+     * <p>DEFINITION<br>
+     * Circular linked list: A (corrupt) linked list in which a node’s next pointer points to an earlier node,
+     * so as to make a loop in the linked list.</p>
+     * <p>EXAMPLE<br>
+     * input: A -> B -> C -> D -> E -> C [the same C as earlier]<br>
+     * output: C</p>
+     */
     @Test
     public void test5() {
         
