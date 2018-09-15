@@ -10,6 +10,10 @@ import org.testng.annotations.Test;
 
 public class Chapter1 {
     
+    /**
+     * Implement an algorithm to determine if a string has all unique characters.
+     * What if you can not use additional data structures?
+     */
     @Test
     public void test1() {
         Assert.assertTrue(isUnique("abcdefg"));
@@ -49,6 +53,10 @@ public class Chapter1 {
         return true;
     }
     
+    /**
+     * Write code to reverse a C-Style String.
+     * (C-String means that “abcd” is represented as five characters, including the null character.)
+     */
     @Test
     public void test2() {
         Assert.assertEquals(reverseCString("abcd" + '\0'), "dcba" + '\0');
@@ -63,6 +71,13 @@ public class Chapter1 {
         return String.valueOf(reverse);
     }
     
+    /**
+     * Design an algorithm and write code to remove the duplicate
+     * characters in a string without using any additional buffer.
+     * <p>NOTE: One or two additional variables are fine. An extra copy of the array is not.</p>
+     * <p>FOLLOW UP<br>
+     * Write the test cases for this method.</p>
+     */
     @Test
     public void test3() {
         String input = "abcdaefg";
@@ -92,6 +107,9 @@ public class Chapter1 {
         return s;
     }
     
+    /**
+     * Write a method to decide if two strings are anagrams or not.
+     */
     @Test
     public void test4() {
         Assert.assertTrue(isAnagram("abcde", "dabec"));
@@ -132,6 +150,9 @@ public class Chapter1 {
         return true;
     }
     
+    /**
+     * Write a method to replace all spaces in a string with ‘%20’.
+     */
     @Test
     public void test5() {
         Assert.assertEquals(replaceSpaces("foo bar baz"), "foo%20bar%20baz");
@@ -149,6 +170,10 @@ public class Chapter1 {
         return sb.toString();
     }
     
+    /**
+     * Given an image represented by an NxN matrix, where each pixel in the image is 4 bytes,
+     * write a method to rotate the image by 90 degrees. Can you do this in place?
+     */
     @Test
     public void test6() {
         int[][] image = new int[][] {
@@ -191,6 +216,10 @@ public class Chapter1 {
         System.out.print("\n");
     }
     
+    /**
+     * Write an algorithm such that if an element in an MxN matrix is 0,
+     * its entire row and column is set to 0.
+     */
     @Test
     public void test7() {
         int[][] matrix = new int[][] {
@@ -229,6 +258,11 @@ public class Chapter1 {
         return matrix;
     }
     
+    /**
+     * Assume you have a method isSubstring which checks if one word is a substring of another.
+     * Given two strings, s1 and s2, write code to check if s2 is a rotation of s1 using only
+     * one call to isSubstring (i.e., “waterbottle” is a rotation of “erbottlewat”).
+     */
     @Test
     public void test8() {
         Assert.assertTrue(isRotation("waterbottle", "erbottlewat"));
